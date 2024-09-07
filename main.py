@@ -199,7 +199,7 @@ class FeedbackForm(ctk.CTk):
         self.title_label.pack(pady=10)
 
         # Create the headers of the feeback
-        HEADER_Y_POS = WINDOW_SIZE[0]*.06
+        HEADER_Y_POS = WINDOW_SIZE[0]*.05
         self.sections = get_sections() 
         section_names = [section['section_id'] for section in self.sections]
         self.selected_section = tk.StringVar(value="Choose section")
