@@ -204,7 +204,7 @@ class FeedbackForm(ctk.CTk):
         section_names = [section['section_id'] for section in self.sections]
         self.selected_section = tk.StringVar(value="Choose section")
         self.section_name = ctk.CTkOptionMenu(self, values=section_names, variable=self.selected_section)
-        self.section_name.place(y=HEADER_Y_POS, x=WINDOW_SIZE[1]*.15)
+        self.section_name.place(y=HEADER_Y_POS, x=WINDOW_SIZE[1]*.15) 
 
         self.courses = get_courses() 
         course_names = [course['course_name'] for course in self.courses]
