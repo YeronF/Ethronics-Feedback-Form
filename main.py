@@ -224,6 +224,7 @@ class FeedbackForm(ctk.CTk):
         initialx, initialy = WINDOW_SIZE[0]*.1, WINDOW_SIZE[1]*.05
         increment_factor = 50
         x_increment_factor = 100
+        x_increment_factor_rate = 175
         initialy_options = 550
         self.questions_response = {}
         for idx, question in enumerate(self.questions_list):
@@ -231,7 +232,7 @@ class FeedbackForm(ctk.CTk):
             question_type = question['type']
             question_id = question['question_id'],
             self.questions_response[question_id] = None
-            if question_type in ['tickbox', 'rate']:
+            if question_type == 'tickbox':
                 options = question['options']
                 question_label = ctk.CTkLabel(self, text=question_text)
                 question_label.place(y=initialx+increment_factor*idx, x=initialy)
@@ -239,6 +240,15 @@ class FeedbackForm(ctk.CTk):
                 for idx2, option in enumerate(options):
                     rb = ctk.CTkRadioButton(master=self, text=option, variable=radio_var)
                     rb.place(y=initialx+increment_factor*idx, x=initialy_options+x_increment_factor*idx2)
+                self.questions_response[question_id] = radio_var
+            elif question_type == 'rate':
+                options = question['options']
+                question_label = ctk.CTkLabel(self, text=question_text)
+                question_label.place(y=initialx+increment_factor*idx, x=initialy)
+                radio_var = tk.StringVar(value='')
+                for idx2, option in enumerate(options):
+                    rb = ctk.CTkRadioButton(master=self, text=option, variable=radio_var)
+                    rb.place(y=initialx+increment_factor*idx, x=initialy_options+x_increment_factor_rate*idx2)
                 self.questions_response[question_id] = radio_var
             else:
                 question_label = ctk.CTkLabel(self, text=question_text)
@@ -249,11 +259,11 @@ class FeedbackForm(ctk.CTk):
 
         # Button to submit feedback
         self.submit_button = ctk.CTkButton(self, text="Submit", command=self.submit)
-        self.submit_button.place(y=initialx+increment_factor*(idx+1), x=WINDOW_SIZE[1]*.5)
+        self.submit_button.place(y=initialx+increment_factor*(idx+1), x=WINDOW_SIZE[1]*.8)
 
         # Button to go back to teacher page
         self.back_button = ctk.CTkButton(self, text="Back", command=self.go_back)
-        self.back_button.place(y=initialx+increment_factor*(idx+2), x=WINDOW_SIZE[1]*.5)
+        self.back_button.place(y=initialx+increment_factor*(idx+2), x=WINDOW_SIZE[1]*.8)
 
     def submit(self):
         # Placeholder function for submitting feedback

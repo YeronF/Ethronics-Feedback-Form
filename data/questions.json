@@ -31,21 +31,21 @@
         "question_id": "Q005", 
         "question": "How relevant was this lesson to what you are lerning in you class?",
         "type": "rate",
-        "options": ["1\nNot relevant", "2", "3\nSomewhat Relevant", "4","5\nHighly Relevant"],
+        "options": ["Not relevant", "Somewhat Relevant","Highly Relevant"],
         "comments": true
     },
     {
         "question_id": "Q006", 
         "question": "How much did this lesson shape your understanding in the real-world?",
         "type": "rate",
-        "options": ["1\n\nNo Change", "2", "3\n\nSomewhat Changed", "4", "5\n\nCompletely Changed"],
+        "options": ["No Change", "Somewhat Changed", "Completely Changed"],
         "comments": true
     },
     {
         "question_id": "Q007", 
         "question": "How interested are you in learnimg more about the lesson?",
         "type": "rate",
-        "options": ["1\nNot Interested", "2", "3\nSomewhat Interested", "4", "5\nExtremely Interested"],
+        "options": ["Not Interested", "Somewhat Interested", "Extremely Interested"],
         "comments": true 
     },
     {
