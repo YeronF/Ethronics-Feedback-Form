@@ -1,0 +1,7 @@
+[
+    {"course_id":"Eth003", "course_name":"Control System", "taught_by": "TE004"},
+    {"course_id":"Eth004", "course_name":"DSD", "taught_by": "TE003"},
+    {"course_id":"Eth002", "course_name":"Python", "taught_by": "TE002"},
+    {"course_id":"Eth001", "course_name":"Robotics", "taught_by": "TE001"}
+
+]

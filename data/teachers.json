@@ -1,0 +1,22 @@
+[
+	{
+		"name": "Dr. Firew",
+		"teacher_id": "TE001",
+		"password" : "17835875"
+	},
+	{
+		"name": "Mr. Yohannes",
+		"teacher_id": "TE002",
+		"password" : "24745228"
+	},
+	{
+		"name": "Mr. Tinsae",
+		"teacher_id": "TE003",
+		"password": "36475994"
+	},
+	{
+		"name": "Mr. Habtamu",
+		"teacher_id": "TE004",
+		"password": "48753259"
+	}
+]
