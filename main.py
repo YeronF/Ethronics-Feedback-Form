@@ -176,7 +176,7 @@ class TeacherPage(ctk.CTk):
         front_page = FrontPage()
         front_page.mainloop()
 
-
+        
 
 class FeedbackForm(ctk.CTk):
     def __init__(self):
@@ -222,6 +222,9 @@ class FeedbackForm(ctk.CTk):
 
 
         # Create the feedback form
+        DValues
+
+
         self.questions_list = get_questions()
         initialx, initialy = WINDOW_SIZE[0]*.1, WINDOW_SIZE[1]*.05
         increment_factor = 50
@@ -268,12 +271,8 @@ class FeedbackForm(ctk.CTk):
         self.back_button.place(y=initialx+increment_factor*(idx+3), x=WINDOW_SIZE[1]*.8)
 
     def submit(self):
-        global initialx, increment_factor,idx,initialy_options,x_increment_factor_rate,idx2
         # Placeholder function for submitting feedback
         print("Submitting feedback...")
-        radio_var = tk.StringVar(value='')
-        rb = ctk.CTkRadioButton(master=self, variable=radio_var)
-        rb.place(y=initialx+increment_factor*idx, x=initialy_options+x_increment_factor_rate*idx2)
         print("Section ", self.selected_section.get())
         print("Class ", self.selected_course.get())
         print("Name ", self.name_entry.get())
