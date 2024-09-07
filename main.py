@@ -151,7 +151,7 @@ class TeacherPage(ctk.CTk):
         self.ethronics_image = ctk.CTkImage(ethronics_img, size=(WINDOW_SIZE[0]*Factor[0]*Pages_factor, WINDOW_SIZE[1]*Factor[1]*Pages_factor))
 
         # Create an image label
-        self.image_label = ctk.CTkLabel(self, text="", image=self.ethronics_image)
+        self.image_label = ctk.CTkLabel(self, text="", image=self.ethronics_image, width=50)
         self.image_label.pack(pady=20)
 
         # Create the title label
@@ -175,6 +175,8 @@ class TeacherPage(ctk.CTk):
         self.destroy()
         front_page = FrontPage()
         front_page.mainloop()
+
+
 
 class FeedbackForm(ctk.CTk):
     def __init__(self):
@@ -259,22 +261,26 @@ class FeedbackForm(ctk.CTk):
 
         # Button to submit feedback
         self.submit_button = ctk.CTkButton(self, text="Submit", command=self.submit)
-        self.submit_button.place(y=initialx+increment_factor*(idx+1), x=WINDOW_SIZE[1]*.8)
+        self.submit_button.place(y=initialx+increment_factor*(idx+2), x=WINDOW_SIZE[1]*.8)
 
         # Button to go back to teacher page
         self.back_button = ctk.CTkButton(self, text="Back", command=self.go_back)
-        self.back_button.place(y=initialx+increment_factor*(idx+2), x=WINDOW_SIZE[1]*.8)
+        self.back_button.place(y=initialx+increment_factor*(idx+3), x=WINDOW_SIZE[1]*.8)
 
     def submit(self):
+        global initialx, increment_factor,idx,initialy_options,x_increment_factor_rate,idx2
         # Placeholder function for submitting feedback
+        print("Submitting feedback...")
+        radio_var = tk.StringVar(value='')
+        rb = ctk.CTkRadioButton(master=self, variable=radio_var)
+        rb.place(y=initialx+increment_factor*idx, x=initialy_options+x_increment_factor_rate*idx2)
         print("Section ", self.selected_section.get())
         print("Class ", self.selected_course.get())
         print("Name ", self.name_entry.get())
         temp_dict = self.questions_response.copy()
         for key, value in temp_dict.items():
             print(key, value, value.get())
-        print("Submitting feedback...")
-
+            
     def go_back(self):
         self.destroy()
         front_page = FrontPage()
