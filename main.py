@@ -1,7 +1,7 @@
 import tkinter as tk
 import customtkinter as ctk
 from PIL import Image
-from auth import get_teacher, get_questions, reload_data, add_form, get_courses, get_sections
+from auth import *
 import os
 
 # Constants
@@ -281,28 +281,12 @@ class FeedbackForm(ctk.CTk):
         self.submit_popup = tk.Toplevel(self)
         frm = tk.Frame(self.submit_popup)
         frm.pack(fill='both', expand=False)
-
-        if 'question_id'
         label = tk.Label(frm, text="are you sure?")
         label.pack(padx=4, pady=4)
         btnYes = tk.Button(frm, text='Yes', command=lambda : self.Yes(response_dict))
         btnYes.pack()
         btnNo = tk.Button(frm, text='No', command=self.No)
         btnNo.pack()
-
-
-        self.submit_popup = tk.Toplevel(self)
-        frm = tk.Frame(self.submit_popup)
-        frm.pack(fill='both', expand=False)
-
-
-        label = tk.Label(frm, text="are you sure?")
-        label.pack(padx=4, pady=4)
-        btnYes = tk.Button(frm, text='Yes', command=lambda : self.Yes(response_dict))
-        btnYes.pack()
-        btnNo = tk.Button(frm, text='No', command=self.No)
-        btnNo.pack()
-
 
     def Yes(self, response_dict):
         print(response_dict)
@@ -315,8 +299,9 @@ class FeedbackForm(ctk.CTk):
     def No(self):
         self.submit_popup.destroy()
 
-        # caller_wants_an_entry = dict_key is not None
-        
+    def No2(self):
+        self.submit_popup1.destroy()
+
     def go_back(self):
         self.destroy()
         front_page = FrontPage()
