@@ -222,9 +222,6 @@ class FeedbackForm(ctk.CTk):
 
 
         # Create the feedback form
-        DValues
-
-
         self.questions_list = get_questions()
         initialx, initialy = WINDOW_SIZE[0]*.1, WINDOW_SIZE[1]*.05
         increment_factor = 50
