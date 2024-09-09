@@ -240,7 +240,7 @@ class FeedbackForm(ctk.CTk):
                 question_label.place(y=initialx+increment_factor*idx, x=initialy)
                 radio_var = tk.StringVar(value='')
                 for idx2, option in enumerate(options):
-                    rb = ctk.CTkRadioButton(master=self, text=option, variable=radio_var)
+                    rb = ctk.CTkRadioButton(master=self, text=option, variable=radio_var, value=option)
                     rb.place(y=initialx+increment_factor*idx, x=initialy_options+x_increment_factor*idx2)
                 self.questions_response[question_id] = radio_var
             elif question_type == 'rate':
@@ -249,7 +249,7 @@ class FeedbackForm(ctk.CTk):
                 question_label.place(y=initialx+increment_factor*idx, x=initialy)
                 radio_var = tk.StringVar(value='')
                 for idx2, option in enumerate(options):
-                    rb = ctk.CTkRadioButton(master=self, text=option, variable=radio_var)
+                    rb = ctk.CTkRadioButton(master=self, text=option, variable=radio_var, value=option)
                     rb.place(y=initialx+increment_factor*idx, x=initialy_options+x_increment_factor_rate*idx2)
                 self.questions_response[question_id] = radio_var
             else:
@@ -270,19 +270,58 @@ class FeedbackForm(ctk.CTk):
     def submit(self):
         # Placeholder function for submitting feedback
         print("Submitting feedback...")
-        print("Section ", self.selected_section.get())
-        print("Class ", self.selected_course.get())
-        print("Name ", self.name_entry.get())
-        temp_dict = self.questions_response.copy()
-        for key, value in temp_dict.items():
-            print(key, value, value.get())
-            
+
+        response_dict = {
+            "Section": self.selected_section.get(),
+            "Class": self.selected_course.get(),
+            "Name": self.name_entry.get(),
+        }
+        response_dict.update({key[0]:value.get() for key, value in self.questions_response.items()})
+
+        self.submit_popup = tk.Toplevel(self)
+        frm = tk.Frame(self.submit_popup)
+        frm.pack(fill='both', expand=False)
+
+        if 'question_id'
+        label = tk.Label(frm, text="are you sure?")
+        label.pack(padx=4, pady=4)
+        btnYes = tk.Button(frm, text='Yes', command=lambda : self.Yes(response_dict))
+        btnYes.pack()
+        btnNo = tk.Button(frm, text='No', command=self.No)
+        btnNo.pack()
+
+
+        self.submit_popup = tk.Toplevel(self)
+        frm = tk.Frame(self.submit_popup)
+        frm.pack(fill='both', expand=False)
+
+
+        label = tk.Label(frm, text="are you sure?")
+        label.pack(padx=4, pady=4)
+        btnYes = tk.Button(frm, text='Yes', command=lambda : self.Yes(response_dict))
+        btnYes.pack()
+        btnNo = tk.Button(frm, text='No', command=self.No)
+        btnNo.pack()
+
+
+    def Yes(self, response_dict):
+        print(response_dict)
+        add_form(response_dict)
+        self.submit_popup.destroy()
+        self.destroy()
+        front_page = FrontPage()
+        front_page.mainloop()
+
+    def No(self):
+        self.submit_popup.destroy()
+
+        # caller_wants_an_entry = dict_key is not None
+        
     def go_back(self):
         self.destroy()
         front_page = FrontPage()
         front_page.after(0, lambda:front_page.state('zoomed'))
         front_page.mainloop()
-
 
 def main():
     app = FrontPage()
@@ -293,21 +332,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

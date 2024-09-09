@@ -31,7 +31,7 @@ def add_teacher(teacher_id, password, name):
             'password': password,
             'name': name
         })
-        json.dump(Teachers, open('teachers.json', 'w'))
+        json.dump(Teachers, open(os.path.join(data_path, 'teachers.json'), 'w'))
     except:
         return False
 
@@ -49,7 +49,7 @@ def add_course(course_id, name, teacher_id):
         'name': name,
         'teacher_id': teacher_id
     })
-    json.dump(Courses, open('courses.json', 'w'))
+    json.dump(Courses, open(os.path.join(data_path, 'courses.json'), 'w'))
 
 def get_teacher_courses(teacher_id):
     return [course for course in Courses if course['teacher_id'] == teacher_id]
@@ -67,4 +67,4 @@ def add_form(form):
     form_id = "FRm"+ str(len(Forms) + 1)
     form['form_id'] = form_id
     Forms.append(form)
-    json.dump(Forms, open('forms.json', 'w'))
+    json.dump(Forms, open(os.path.join(data_path, 'forms.json'), 'w'))

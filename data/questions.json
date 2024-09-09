@@ -1,57 +1,81 @@
 [
-    {
-        "question_id": "Q001", 
-        "question": "Was the amount of the background information provided for each\nactivity sufficient?",
-        "type": "tickbox",
-        "options": ["Yes","No"],
-        "comments": true
-    },
-    {
-        "question_id": "Q002", 
-        "question": "Were you provided enough time to perform the activity?",
-        "type": "tickbox",
-        "options": ["Yes","No"],
-        "comments": true
-    },
-    {
-        "question_id": "Q003", 
-        "question": "Are the illustrations/charts/graphs helpful?",
-        "type": "tickbox",
-        "options": ["Yes","No"],
-        "comments": true
-    },
-    {
-        "question_id": "Q004", 
-        "question": "Do the review questtions help clarify you thinking?",
-        "type": "tickbox",
-        "options": ["Yes","No"],
-        "comments": true
-    },
-    {
-        "question_id": "Q005", 
-        "question": "How relevant was this lesson to what you are lerning in you class?",
-        "type": "rate",
-        "options": ["Not relevant", "Somewhat Relevant","Highly Relevant"],
-        "comments": true
-    },
-    {
-        "question_id": "Q006", 
-        "question": "How much did this lesson shape your understanding in the real-world?",
-        "type": "rate",
-        "options": ["No Change", "Somewhat Changed", "Completely Changed"],
-        "comments": true
-    },
-    {
-        "question_id": "Q007", 
-        "question": "How interested are you in learnimg more about the lesson?",
-        "type": "rate",
-        "options": ["Not Interested", "Somewhat Interested", "Extremely Interested"],
-        "comments": true 
-    },
-    {
-        "question_id": "Q008", 
-        "question": "Based on lesson, would you recommend Ethronics-IRAS to others?",
-        "type": "comment",
-        "comments": true   
-    }   
+  {
+    "question_id": "Q001",
+    "question": "Was the amount of the background information provided for each\nactivity sufficient?",
+    "type": "tickbox",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "comments": true
+  },
+  {
+    "question_id": "Q002",
+    "question": "Were you provided enough time to perform the activity?",
+    "type": "tickbox",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "comments": true
+  },
+  {
+    "question_id": "Q003",
+    "question": "Are the illustrations/charts/graphs helpful?",
+    "type": "tickbox",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "comments": true
+  },
+  {
+    "question_id": "Q004",
+    "question": "Do the review questtions help clarify you thinking?",
+    "type": "tickbox",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "comments": true
+  },
+  {
+    "question_id": "Q005",
+    "question": "How relevant was this lesson to what you are lerning in you class?",
+    "type": "rate",
+    "options": [
+      "Not relevant",
+      "Somewhat Relevant",
+      "Highly Relevant"
+    ],
+    "comments": true
+  },
+  {
+    "question_id": "Q006",
+    "question": "How much did this lesson shape your understanding in the real-world?",
+    "type": "rate",
+    "options": [
+      "No Change",
+      "Somewhat Changed",
+      "Completely Changed"
+    ],
+    "comments": true
+  },
+  {
+    "question_id": "Q007",
+    "question": "How interested are you in learnimg more about the lesson?",
+    "type": "rate",
+    "options": [
+      "Not Interested",
+      "Somewhat Interested",
+      "Extremely Interested"
+    ],
+    "comments": true
+  },
+  {
+    "question_id": "Q008",
+    "question": "Based on lesson, would you recommend Ethronics-IRAS to others?",
+    "type": "comment",
+    "comments": true
+  }
 ]
