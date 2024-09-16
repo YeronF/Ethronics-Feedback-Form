@@ -35,7 +35,7 @@ class FrontPage(ctk.CTk):
         # self.geometry(f'{WINDOW_SIZE[0]}x{WINDOW_SIZE[1]}')
 
         # Load the Ethronics image
-        self.ethronics_image = ctk.CTkImage(ethronics_img, size=(WINDOW_SIZE[0]*Factor[0], WINDOW_SIZE[1]*Factor[1]))
+        self.ethronics_image = ctk.CTkImage(ethronics_img, size=(WINDOW_SIZE[0]*Factor[0], WINDOW_SIZE[0]*Factor[0]))
 
         # Create an image label
         self.image_label = ctk.CTkLabel(self, text="", image=self.ethronics_image)
@@ -88,7 +88,7 @@ class LoginPage(ctk.CTk):
         # self.geometry(f'{WINDOW_SIZE[0]}x{WINDOW_SIZE[1]}')
 
         # Load the Ethronics image
-        self.ethronics_image = ctk.CTkImage(ethronics_img, size=(WINDOW_SIZE[0]*Factor[0]*Pages_factor, WINDOW_SIZE[1]*Factor[1]*Pages_factor))
+        self.ethronics_image = ctk.CTkImage(ethronics_img, size=(WINDOW_SIZE[0]*Factor[0]*Pages_factor, WINDOW_SIZE[0]*Factor[0]*Pages_factor))
 
         # Create an image label
         self.image_label = ctk.CTkLabel(self, text="", image=self.ethronics_image)
@@ -277,16 +277,32 @@ class FeedbackForm(ctk.CTk):
             "Name": self.name_entry.get(),
         }
         response_dict.update({key[0]:value.get() for key, value in self.questions_response.items()})
+        optionals = ["Name"]
+        flag = any(response_dict[key]=="" for key in response_dict if key not in optionals)
 
-        self.submit_popup = tk.Toplevel(self)
-        frm = tk.Frame(self.submit_popup)
-        frm.pack(fill='both', expand=False)
-        label = tk.Label(frm, text="are you sure?")
-        label.pack(padx=4, pady=4)
-        btnYes = tk.Button(frm, text='Yes', command=lambda : self.Yes(response_dict))
-        btnYes.pack()
-        btnNo = tk.Button(frm, text='No', command=self.No)
-        btnNo.pack()
+        if flag:
+            self.submit_popup = ctk.CTkToplevel(self, width=WINDOW_SIZE[0]*.2, height=WINDOW_SIZE[1]*.2)
+            frm = ctk.CTkFrame(self.submit_popup )
+            frm.pack(fill='both', expand=False)
+            label = ctk.CTkLabel(frm, text="Missing data! Please Check")
+            label.pack(padx=4, pady=4)
+            btnNo = ctk.CTkButton(frm, text='Ok', command=self.No)
+            btnNo.pack()
+            self.submit_popup.after(100, self.submit_popup.lift)
+            self.submit_popup.focus_force()
+
+        else:
+            self.submit_popup = ctk.CTkToplevel(self,  width=WINDOW_SIZE[0]*.2, height=WINDOW_SIZE[1]*.2)
+            frm = ctk.CTkFrame(self.submit_popup)
+            frm.pack(fill='both', expand=False)
+            label = ctk.CTkLabel(frm, text="Are you sure?")
+            label.pack(padx=4, pady=4)
+            btnYes = ctk.CTkButton(frm, text='Yes', command=lambda : self.Yes(response_dict))
+            btnYes.pack()
+            btnNo = ctk.CTkButton(frm, text='No', command=self.No)
+            btnNo.pack()
+            self.submit_popup.after(100, self.submit_popup.lift)
+            self.submit_popup.focus_force()
 
     def Yes(self, response_dict):
         print(response_dict)
