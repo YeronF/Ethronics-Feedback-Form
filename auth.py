@@ -64,7 +64,7 @@ def get_sections():
     return Sections
 
 def add_form(form):
-    form_id = "Form"+ str(len(Forms) + 1)
+    form_id = "Form "+ str(len(Forms) + 1)
     form['form_id'] = form_id
     Forms.append(form)
     json.dump(Forms, open(os.path.join(data_path, 'forms.json'), 'w'))

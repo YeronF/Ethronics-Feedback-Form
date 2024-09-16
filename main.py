@@ -128,7 +128,18 @@ class LoginPage(ctk.CTk):
             teacher_page = TeacherPage(teacher_id)
             teacher_page.mainloop()
         else:
-            print("Login failed")
+            self.login_popup = ctk.CTkToplevel(self, width=WINDOW_SIZE[0]*.5, height=WINDOW_SIZE[1]*.5)
+            width, height = WINDOW_SIZE[0]*.3, WINDOW_SIZE[1]*.3
+            self.login_popup.geometry("%dx%d+%d+%d" % (width, height, self.winfo_x() + width/4, self.winfo_y() + height/4))
+
+            frm = ctk.CTkFrame(self.login_popup)
+            frm.pack(fill='both', expand=False)
+            label = ctk.CTkLabel(frm, text="Invalid credentials")
+            label.pack(padx=4, pady=4)
+            btnNo = ctk.CTkButton(frm, text='Ok', command=self.No)
+            btnNo.pack()
+            self.login_popup.after(100, self.login_popup.lift)
+            self.login_popup.focus_force()
 
     def go_back(self):
         self.destroy()
@@ -160,17 +171,33 @@ class TeacherPage(ctk.CTk):
         self.title_label.pack(pady=10)
 
         # Button to view FeedBack
-        self.view_feedback_button = ctk.CTkButton(self, text="View Feedback", command=lambda: self.VFeedBack(teacher_id))
+        self.view_feedback_button = ctk.CTkButton(self, text="View Feedback", command=self.view_feedback)
         self.view_feedback_button.pack(pady=10)
 
         # Button to log out
         self.logout_button = ctk.CTkButton(self, text="Logout", command=self.logout)
         self.logout_button.pack(pady=10)
 
-    def VFeedBack(self):
+    def view_feedback(self):
+        # Placeholder function for viewing courses
+        feedbacks = get_feedbacks(self.teacher_id)
+        sections = [i['section_id'] for i in get_sections()]
+        self.categorized = {section:[] for section in sections}
+        for feedback in feedbacks:
+            section = feedback['Section']
+            del feedback['Section']
+            self.categorized[section].append(feedback)
+
+
+        # Create a buttons for each section
+        for section in sections:
+            self.section_button = ctk.CTkButton(self, text=section, command=lambda section=section: self.view_feedback_section(section, self.categorized[section]))
+            self.section_button.pack(pady=10)
+
+    def view_feedback_section(self, section, feedbacks):
         self.destroy()
-        VF = view_feedback()
-        VF.mainloop()
+        feedback_page = FeedbackPage(section, feedbacks)
+        feedback_page.mainloop()
 
     def logout(self):
         self.destroy()
@@ -178,21 +205,43 @@ class TeacherPage(ctk.CTk):
         front_page.mainloop()
 
 
-class view_feedback(ctk.CTk):
-    def __init__(self, teacher_id):
+class FeedbackPage(ctk.CTk):
+    def __init__(self, section, feedbacks):
         super().__init__()
-        self.teacher_id = teacher_id
-        # Placeholder function for viewing courses
-        feedbacks = get_feedbacks(self.teacher_id)
-        sections = [i['section_id'] for i in get_sections()]
-        categorized = {section:[] for section in sections}
+
+        # Set the window title
+        self.title('Ethronics - Feedback Page')
+
+        # Set window size
+        self.after(0, lambda:self.state('zoomed'))
+        # self.geometry(f'{WINDOW_SIZE[0]}x{WINDOW_SIZE[1]}')
+
+        # Load the Ethronics image
+        self.ethronics_image = ctk.CTkImage(ethronics_img, size=(WINDOW_SIZE[0]*Factor[0]*Pages_factor, WINDOW_SIZE[1]*Factor[1]*Pages_factor))
+
+        # Create an image label
+        self.image_label = ctk.CTkLabel(self, text="", image=self.ethronics_image)
+        self.image_label.pack(pady=20)
+
+        # Create the title label
+        self.title_label = ctk.CTkLabel(self, text=f'Ethronics - Feedback Page - {section}', font=("Arial", 20))
+        self.title_label.pack(pady=10)
+
+        # Create a label for each feedback
         for feedback in feedbacks:
-            section = feedback['Section']
-            del feedback['Section']
-            categorized[section].append(feedback)
+            feedback_text = f"Name: {feedback['Name']}\n"
+            feedback_text += "\n".join([f"{key}: {value}" for key, value in feedback.items() if key != 'Name'])
+            self.feedback_label = ctk.CTkLabel(self, text=feedback_text)
+            self.feedback_label.pack(pady=10)
 
+        # Button to go back to teacher page
+        self.back_button = ctk.CTkButton(self, text="Back", command=self.go_back)
+        self.back_button.pack(pady=10)
 
-        ctk.CTkLabel(categorized).pack()
+    def go_back(self):
+        self.destroy()
+        teacher_page = TeacherPage()
+        teacher_page.mainloop()
 
         
 
