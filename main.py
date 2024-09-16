@@ -139,6 +139,7 @@ class LoginPage(ctk.CTk):
 class TeacherPage(ctk.CTk):
     def __init__(self, teacher_id):
         super().__init__()
+        self.teacher_id = teacher_id
 
         # Set the window title
         self.title('Ethronics - Teacher Page')
@@ -158,23 +159,40 @@ class TeacherPage(ctk.CTk):
         self.title_label = ctk.CTkLabel(self, text='Ethronics - Teacher Page', font=("Arial", 20))
         self.title_label.pack(pady=10)
 
-        # Button to view courses
-        # self.view_courses_button = ctk.CTkButton(self, text="View Courses", command=self.view_courses)
-        # self.view_courses_button.pack(pady=10)
+        # Button to view FeedBack
+        self.view_feedback_button = ctk.CTkButton(self, text="View Feedback", command=lambda: self.VFeedBack(teacher_id))
+        self.view_feedback_button.pack(pady=10)
 
         # Button to log out
         self.logout_button = ctk.CTkButton(self, text="Logout", command=self.logout)
         self.logout_button.pack(pady=10)
 
-
-    # def view_courses(self):
-    #     # Placeholder function for viewing courses
-    #     print("Viewing courses...")
+    def VFeedBack(self):
+        self.destroy()
+        VF = view_feedback()
+        VF.mainloop()
 
     def logout(self):
         self.destroy()
         front_page = FrontPage()
         front_page.mainloop()
+
+
+class view_feedback(ctk.CTk):
+    def __init__(self, teacher_id):
+        super().__init__()
+        self.teacher_id = teacher_id
+        # Placeholder function for viewing courses
+        feedbacks = get_feedbacks(self.teacher_id)
+        sections = [i['section_id'] for i in get_sections()]
+        categorized = {section:[] for section in sections}
+        for feedback in feedbacks:
+            section = feedback['Section']
+            del feedback['Section']
+            categorized[section].append(feedback)
+
+
+        ctk.CTkLabel(categorized).pack()
 
         
 
@@ -281,8 +299,11 @@ class FeedbackForm(ctk.CTk):
         flag = any(response_dict[key]=="" for key in response_dict if key not in optionals)
 
         if flag:
-            self.submit_popup = ctk.CTkToplevel(self, width=WINDOW_SIZE[0]*.2, height=WINDOW_SIZE[1]*.2)
-            frm = ctk.CTkFrame(self.submit_popup )
+            self.submit_popup = ctk.CTkToplevel(self, width=WINDOW_SIZE[0]*.5, height=WINDOW_SIZE[1]*.5)
+            width, height = WINDOW_SIZE[0]*.3, WINDOW_SIZE[1]*.3
+            self.submit_popup.geometry("%dx%d+%d+%d" % (width, height, self.winfo_x() + width/4, self.winfo_y() + height/4))
+
+            frm = ctk.CTkFrame(self.submit_popup)
             frm.pack(fill='both', expand=False)
             label = ctk.CTkLabel(frm, text="Missing data! Please Check")
             label.pack(padx=4, pady=4)
@@ -292,7 +313,9 @@ class FeedbackForm(ctk.CTk):
             self.submit_popup.focus_force()
 
         else:
-            self.submit_popup = ctk.CTkToplevel(self,  width=WINDOW_SIZE[0]*.2, height=WINDOW_SIZE[1]*.2)
+            self.submit_popup = ctk.CTkToplevel(self,  width=WINDOW_SIZE[0]*.5, height=WINDOW_SIZE[1]*.5)
+            width, height = WINDOW_SIZE[0]*.3, WINDOW_SIZE[1]*.3
+            self.submit_popup.geometry("%dx%d+%d+%d" % (width, height, self.winfo_x() + width/4, self.winfo_y() + height/4))
             frm = ctk.CTkFrame(self.submit_popup)
             frm.pack(fill='both', expand=False)
             label = ctk.CTkLabel(frm, text="Are you sure?")
@@ -314,9 +337,6 @@ class FeedbackForm(ctk.CTk):
 
     def No(self):
         self.submit_popup.destroy()
-
-    def No2(self):
-        self.submit_popup1.destroy()
 
     def go_back(self):
         self.destroy()
