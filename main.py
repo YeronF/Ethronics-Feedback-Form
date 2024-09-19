@@ -1,3 +1,5 @@
+import time
+import datetime
 import tkinter as tk
 import customtkinter as ctk
 from PIL import Image
@@ -128,6 +130,8 @@ class LoginPage(ctk.CTk):
             teacher_page = TeacherPage(teacher_id)
             teacher_page.mainloop()
         else:
+            if getattr(self, 'login_popup', None):
+                self.login_popup.destroy()
             self.login_popup = ctk.CTkToplevel(self, width=WINDOW_SIZE[0]*.5, height=WINDOW_SIZE[1]*.5)
             width, height = WINDOW_SIZE[0]*.3, WINDOW_SIZE[1]*.3
             self.login_popup.geometry("%dx%d+%d+%d" % (width, height, self.winfo_x() + width/4, self.winfo_y() + height/4))
@@ -140,6 +144,9 @@ class LoginPage(ctk.CTk):
             btnNo.pack()
             self.login_popup.after(100, self.login_popup.lift)
             self.login_popup.focus_force()
+
+    def No(self):
+        self.login_popup.destroy()
 
     def go_back(self):
         self.destroy()
@@ -171,32 +178,37 @@ class TeacherPage(ctk.CTk):
         self.title_label.pack(pady=10)
 
         # Button to view FeedBack
-        self.view_feedback_button = ctk.CTkButton(self, text="View Feedback", command=self.view_feedback)
+        self.view_feedback_button = ctk.CTkButton(self, text="View Feedback", command=lambda:[self.view_feedback(), self.Destroy_Btn()])
         self.view_feedback_button.pack(pady=10)
 
         # Button to log out
         self.logout_button = ctk.CTkButton(self, text="Logout", command=self.logout)
         self.logout_button.pack(pady=10)
 
+    def Destroy_Btn(self):
+        self.view_feedback_button.destroy()
+
     def view_feedback(self):
         # Placeholder function for viewing courses
         feedbacks = get_feedbacks(self.teacher_id)
         sections = [i['section_id'] for i in get_sections()]
-        self.categorized = {section:[] for section in sections}
+        self.categorized = {section:{} for section in sections}
         for feedback in feedbacks:
             section = feedback['Section']
-            del feedback['Section']
-            self.categorized[section].append(feedback)
-
+            self.categorized[section][feedback['form_id']] = feedback
 
         # Create a buttons for each section
         for section in sections:
             self.section_button = ctk.CTkButton(self, text=section, command=lambda section=section: self.view_feedback_section(section, self.categorized[section]))
             self.section_button.pack(pady=10)
 
+
+
     def view_feedback_section(self, section, feedbacks):
         self.destroy()
-        feedback_page = FeedbackPage(section, feedbacks)
+        
+        feedback_page = FeedbackPage(section, feedbacks, self.teacher_id)
+        
         feedback_page.mainloop()
 
     def logout(self):
@@ -206,15 +218,24 @@ class TeacherPage(ctk.CTk):
 
 
 class FeedbackPage(ctk.CTk):
-    def __init__(self, section, feedbacks):
+    def __init__(self, section, feedbacks, teacher_id):
+        self.feedbacks = feedbacks
+        print('-'*50)
+        print(self.feedbacks)
+        print('-'*50)
         super().__init__()
 
         # Set the window title
         self.title('Ethronics - Feedback Page')
+        self.teacher_id = teacher_id
 
         # Set window size
         self.after(0, lambda:self.state('zoomed'))
         # self.geometry(f'{WINDOW_SIZE[0]}x{WINDOW_SIZE[1]}')
+
+        # Button to go back to teacher page
+        self.back_button = ctk.CTkButton(self, text="Back", command=self.go_back, height=20, width=20)
+        self.back_button.pack(side=ctk.RIGHT, anchor=ctk.N)
 
         # Load the Ethronics image
         self.ethronics_image = ctk.CTkImage(ethronics_img, size=(WINDOW_SIZE[0]*Factor[0]*Pages_factor, WINDOW_SIZE[1]*Factor[1]*Pages_factor))
@@ -227,23 +248,46 @@ class FeedbackPage(ctk.CTk):
         self.title_label = ctk.CTkLabel(self, text=f'Ethronics - Feedback Page - {section}', font=("Arial", 20))
         self.title_label.pack(pady=10)
 
-        # Create a label for each feedback
-        for feedback in feedbacks:
-            feedback_text = f"Name: {feedback['Name']}\n"
-            feedback_text += "\n".join([f"{key}: {value}" for key, value in feedback.items() if key != 'Name'])
-            self.feedback_label = ctk.CTkLabel(self, text=feedback_text)
-            self.feedback_label.pack(pady=10)
+        self.FFOUTPUTS = ctk.CTkFrame(self, width=1000, height=450)
+        self.FFOUTPUTS.pack()
 
-        # Button to go back to teacher page
-        self.back_button = ctk.CTkButton(self, text="Back", command=self.go_back)
-        self.back_button.pack(pady=10)
+        self.feedback_keys = list(feedbacks.keys())
+        if len(self.feedback_keys):
+            self.current_feedback_id = 0
+            self.display_form(self.current_feedback_id)
+        else:
+            pass
+
+
+    def display_form(self, f_id):
+        self.current_feedback_id = f_id
+        # Display the feedback form
+        self.FFOUTPUTS.destroy()
+        self.FFOUTPUTS = ctk.CTkFrame(self, width=1000, height=450)
+        self.FFOUTPUTS.pack()
+        questions_list = get_questions()
+        self.questions_dict = {question['question_id']:question['question'] for question in questions_list}
+        feedback = self.feedbacks[self.feedback_keys[f_id]]
+        self.feedback_label = ctk.CTkLabel(self.FFOUTPUTS, text=f"Feedback from {feedback['Name'] or 'Anonymous'}")
+        self.feedback_label.pack(pady=10)
+        for key, value in feedback.items():
+            if key in self.questions_dict:
+                self.question_label = ctk.CTkLabel(self.FFOUTPUTS, text=f"{self.questions_dict[key]}: {value}")
+                self.question_label.pack(pady=10)
+        if self.current_feedback_id > 0:
+            goBackButton = ctk.CTkButton(self, text='<', font=('bold', 50), text_color='Black', width=10, fg_color='transparent', hover_color='Light Gray', command=lambda : self.display_form(f_id-1))
+            goBackButton.place(x=300, y=300)
+
+        if self.current_feedback_id < len(self.feedback_keys) - 1:
+            nextButton = ctk.CTkButton(self, text='>', font=('bold', 50), text_color='Black', width=10, fg_color='transparent', hover_color='Light Gray', command=lambda : self.display_form(f_id+1))
+            nextButton.place(x=925, y=300)
+
 
     def go_back(self):
         self.destroy()
-        teacher_page = TeacherPage()
+        teacher_page = TeacherPage(self.teacher_id)
         teacher_page.mainloop()
 
-        
 
 class FeedbackForm(ctk.CTk):
     def __init__(self):
@@ -322,7 +366,7 @@ class FeedbackForm(ctk.CTk):
             else:
                 question_label = ctk.CTkLabel(self, text=question_text)
                 question_label.place(y=initialx+increment_factor*idx, x=initialy)
-                question_entry = ctk.CTkEntry(self)
+                question_entry = ctk.CTkEntry(self, width=400)
                 question_entry.place(y=initialx+increment_factor*idx, x=initialy_options+initialy)
                 self.questions_response[question_id] = question_entry
 
@@ -335,9 +379,6 @@ class FeedbackForm(ctk.CTk):
         self.back_button.place(y=initialx+increment_factor*(idx+3), x=WINDOW_SIZE[1]*.8)
 
     def submit(self):
-        # Placeholder function for submitting feedback
-        print("Submitting feedback...")
-
         response_dict = {
             "Section": self.selected_section.get(),
             "Class": self.selected_course.get(),
@@ -346,11 +387,17 @@ class FeedbackForm(ctk.CTk):
         response_dict.update({key[0]:value.get() for key, value in self.questions_response.items()})
         optionals = ["Name"]
         flag = any(response_dict[key]=="" for key in response_dict if key not in optionals)
+        flag = flag or response_dict["Section"] == "Choose section" or response_dict["Class"] == "Choose course"
 
         if flag:
-            self.submit_popup = ctk.CTkToplevel(self, width=WINDOW_SIZE[0]*.5, height=WINDOW_SIZE[1]*.5)
+            if getattr(self, 'submit_popup', None):
+                self.submit_popup.destroy()
+            self.submit_popup = ctk.CTkToplevel(self, takefocus=True)
             width, height = WINDOW_SIZE[0]*.3, WINDOW_SIZE[1]*.3
             self.submit_popup.geometry("%dx%d+%d+%d" % (width, height, self.winfo_x() + width/4, self.winfo_y() + height/4))
+            self.submit_popup.title("Error")
+            self.submit_popup.resizable(False, False)
+            self.submit_popup.attributes('-topmost', True)
 
             frm = ctk.CTkFrame(self.submit_popup)
             frm.pack(fill='both', expand=False)
@@ -360,11 +407,18 @@ class FeedbackForm(ctk.CTk):
             btnNo.pack()
             self.submit_popup.after(100, self.submit_popup.lift)
             self.submit_popup.focus_force()
+            self.submit_popup.mainloop()
 
         else:
-            self.submit_popup = ctk.CTkToplevel(self,  width=WINDOW_SIZE[0]*.5, height=WINDOW_SIZE[1]*.5)
+            if getattr(self, 'submit_popup', None):
+                self.submit_popup.destroy()
+            self.submit_popup = ctk.CTkToplevel(self,  takefocus=True)
             width, height = WINDOW_SIZE[0]*.3, WINDOW_SIZE[1]*.3
             self.submit_popup.geometry("%dx%d+%d+%d" % (width, height, self.winfo_x() + width/4, self.winfo_y() + height/4))
+            self.submit_popup.title("Confirm")
+            self.submit_popup.resizable(False, False)
+            self.submit_popup.attributes('-topmost', True)
+
             frm = ctk.CTkFrame(self.submit_popup)
             frm.pack(fill='both', expand=False)
             label = ctk.CTkLabel(frm, text="Are you sure?")
@@ -375,10 +429,28 @@ class FeedbackForm(ctk.CTk):
             btnNo.pack()
             self.submit_popup.after(100, self.submit_popup.lift)
             self.submit_popup.focus_force()
+            self.submit_popup.mainloop()
 
     def Yes(self, response_dict):
-        print(response_dict)
         add_form(response_dict)
+
+        self.submit_popup.destroy()
+        self.submit_popup = ctk.CTkToplevel(self,  takefocus=True)
+        width, height = WINDOW_SIZE[0]*.3, WINDOW_SIZE[1]*.3
+        self.submit_popup.geometry("%dx%d+%d+%d" % (width, height, self.winfo_x() + width/4, self.winfo_y() + height/4))
+        self.submit_popup.title("Success")
+        frm = ctk.CTkFrame(self.submit_popup)
+        frm.pack(fill='both', expand=False)
+        label = ctk.CTkLabel(frm, text="Feedback submitted successfully")
+        label.pack(padx=4, pady=4)
+        
+
+        self.submit_popup.resizable(False, False)
+        self.submit_popup.attributes('-topmost', True)
+        self.submit_popup.after(100, self.submit_popup.lift)
+        self.submit_popup.focus_force()
+
+        time.sleep(1)
         self.submit_popup.destroy()
         self.destroy()
         front_page = FrontPage()
@@ -399,6 +471,7 @@ def main():
     WINDOW_SIZE = app.winfo_screenwidth(), app.winfo_screenheight()
     print(WINDOW_SIZE)
     app.mainloop()
+    print()
 
 if __name__ == '__main__':
     main()

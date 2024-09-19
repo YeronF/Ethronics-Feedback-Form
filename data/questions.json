@@ -4,8 +4,8 @@
     "question": "Was the amount of the background information provided for each\nactivity sufficient?",
     "type": "tickbox",
     "options": [
-      "Yes",
-      "No"
+      "No",
+      "Yes"
     ],
     "comments": true
   },
@@ -14,8 +14,8 @@
     "question": "Were you provided enough time to perform the activity?",
     "type": "tickbox",
     "options": [
-      "Yes",
-      "No"
+      "No",
+      "Yes"
     ],
     "comments": true
   },
@@ -24,8 +24,8 @@
     "question": "Are the illustrations/charts/graphs helpful?",
     "type": "tickbox",
     "options": [
-      "Yes",
-      "No"
+      "No",
+      "Yes"
     ],
     "comments": true
   },
@@ -34,8 +34,8 @@
     "question": "Do the review questtions help clarify you thinking?",
     "type": "tickbox",
     "options": [
-      "Yes",
-      "No"
+      "No",
+      "Yes"
     ],
     "comments": true
   },
