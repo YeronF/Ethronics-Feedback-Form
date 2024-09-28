@@ -1,4 +1,5 @@
 import time
+from Calc import C_Y
 import datetime
 import tkinter as tk
 import customtkinter as ctk
@@ -220,9 +221,7 @@ class TeacherPage(ctk.CTk):
 class FeedbackPage(ctk.CTk):
     def __init__(self, section, feedbacks, teacher_id):
         self.feedbacks = feedbacks
-        print('-'*50)
-        print(self.feedbacks)
-        print('-'*50)
+        C_Y(feedbacks)
         super().__init__()
 
         # Set the window title
@@ -232,6 +231,10 @@ class FeedbackPage(ctk.CTk):
         # Set window size
         self.after(0, lambda:self.state('zoomed'))
         # self.geometry(f'{WINDOW_SIZE[0]}x{WINDOW_SIZE[1]}')
+
+        # Button to go back to view analysis
+        self.back_button = ctk.CTkButton(self, text="View Analysis", command=self.go_back, height=20, width=20)
+        self.back_button.pack(side=ctk.TOP, anchor=ctk.W)
 
         # Button to go back to teacher page
         self.back_button = ctk.CTkButton(self, text="Back", command=self.go_back, height=20, width=20)
@@ -275,11 +278,11 @@ class FeedbackPage(ctk.CTk):
                 self.question_label = ctk.CTkLabel(self.FFOUTPUTS, text=f"{self.questions_dict[key]}: {value}")
                 self.question_label.pack(pady=10)
         if self.current_feedback_id > 0:
-            goBackButton = ctk.CTkButton(self, text='<', font=('bold', 50), text_color='Black', width=10, fg_color='transparent', hover_color='Light Gray', command=lambda : self.display_form(f_id-1))
+            goBackButton = ctk.CTkButton(self, text='<', font=('bold', 50), text_color='Black', width=10, fg_color='transparent', hover_color='Light Gray', bg_color='transparent', command=lambda : self.display_form(f_id-1))
             goBackButton.place(x=300, y=300)
 
         if self.current_feedback_id < len(self.feedback_keys) - 1:
-            nextButton = ctk.CTkButton(self, text='>', font=('bold', 50), text_color='Black', width=10, fg_color='transparent', hover_color='Light Gray', command=lambda : self.display_form(f_id+1))
+            nextButton = ctk.CTkButton(self, text='>', font=('bold', 50), text_color='Black', width=10, fg_color='transparent', hover_color='Light Gray', bg_color='transparent', command=lambda : self.display_form(f_id+1))
             nextButton.place(x=925, y=300)
 
 

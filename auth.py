@@ -1,5 +1,6 @@
 import json
 import os
+import datetime
 
 data_path = "data"
 
@@ -66,6 +67,7 @@ def get_sections():
 def add_form(form):
     form_id = "Form "+ str(len(Forms) + 1)
     form['form_id'] = form_id
+    form['date'] = str(datetime.datetime.today()).split('.')[0]
     Forms.append(form)
     json.dump(Forms, open(os.path.join(data_path, 'forms.json'), 'w'))
 
